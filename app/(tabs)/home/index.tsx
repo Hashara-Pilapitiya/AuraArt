@@ -4,6 +4,7 @@ import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { Stack, useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Colors from '@/constants/Colors'
+import Categories from '@/components/Categories'
 
 const HomeScreen = () => {
 
@@ -16,6 +17,12 @@ const HomeScreen = () => {
   const [search, setSearch] = React.useState('')  
 
   const searchInputRef = React.useRef(null);
+
+  const [activeCategory, setActiveCategory] = React.useState(null)
+
+  const handleChangeCategory = (cat: any) => {
+    setActiveCategory(cat)
+  }
 
   return (
     <>
@@ -66,6 +73,13 @@ const HomeScreen = () => {
         }
 
     
+      </View>
+
+      {/* Categories */}
+      <View style={styles.categories}>
+
+        <Categories activeCategory={activeCategory} handleChangeCategory={handleChangeCategory} />
+
       </View>
 
     </ScrollView>
