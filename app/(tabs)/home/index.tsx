@@ -1,10 +1,12 @@
 import { StyleSheet, View, Text, TouchableOpacity, Pressable, ScrollView, TextInput } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { Stack, useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Colors from '@/constants/Colors'
 import Categories from '@/components/Categories'
+import { apiCall } from '../../../api'
+import ImageGrid from '@/components/ImageGrid'
 
 const HomeScreen = () => {
 
@@ -19,6 +21,23 @@ const HomeScreen = () => {
   const searchInputRef = React.useRef(null);
 
   const [activeCategory, setActiveCategory] = React.useState(null)
+
+  const [images, setImages] = React.useState([])
+
+  useEffect(() => {
+    fetchImages()
+  }, []);
+
+  const fetchImages = async (params={page: 1}, append=true) => {
+    let res = await apiCall (params);
+    if (res.success && res?.data?.hits) {
+      if(append) {
+        setImages([...images, ...res.data.hits])
+      } else {
+        setImages([...res.data.hits])
+      }
+    }
+  }
 
   const handleChangeCategory = (cat: any) => {
     setActiveCategory(cat)
@@ -82,6 +101,13 @@ const HomeScreen = () => {
 
       </View>
 
+      {/* Images */}
+      <View>
+          {
+            images.length > 0 && <ImageGrid images={images} />
+          }
+      </View>
+
     </ScrollView>
 
     </View>
@@ -123,5 +149,9 @@ const styles = StyleSheet.create({
   closeIcon: {
     padding: 5,
     borderRadius: 10
+  },
+
+  categories: {
+    marginHorizontal: 20
   }
 })
