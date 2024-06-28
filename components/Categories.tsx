@@ -43,13 +43,12 @@ export default Categories
 
 const styles = StyleSheet.create({
   flatlistContiner: {
-    marginTop: 20,
+    marginTop: 10,
     gap: 15,
-    paddingLeft: 15
   },
 
     category: {
-        padding: 10,
+        paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 10,
     },
