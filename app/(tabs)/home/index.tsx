@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, TouchableOpacity, Pressable, ScrollView, TextInput } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { Stack, useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -7,6 +7,9 @@ import Colors from '@/constants/Colors'
 import Categories from '@/components/Categories'
 import { apiCall } from '../../../api'
 import ImageGrid from '@/components/ImageGrid'
+import { debounce } from 'lodash'
+
+let page = 1;
 
 const HomeScreen = () => {
 
@@ -29,6 +32,7 @@ const HomeScreen = () => {
   }, []);
 
   const fetchImages = async (params={page: 1}, append=false) => {
+    console.log('fetching images', params, append)
     let res = await apiCall (params);
     if (res.success && res?.data?.hits) {
       if(append) {
@@ -42,6 +46,33 @@ const HomeScreen = () => {
   const handleChangeCategory = (cat: any) => {
     setActiveCategory(cat)
   }
+
+  const handleSearch = (text) => {
+    setSearch(text);
+
+    if(text.length > 2) {
+      page = 1;
+      setImages([]);
+      fetchImages({page, q: text})
+    } 
+
+    if(text == '') {
+      page = 1;
+      searchInputRef?.current?.clear();
+      setImages([]);
+      fetchImages({page})
+    }
+}
+
+const clearSearch = () => {
+  setSearch('');
+  searchInputRef?.current?.clear();
+  page = 1;
+
+}
+
+
+const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
 
   return (
     <>
@@ -78,14 +109,14 @@ const HomeScreen = () => {
         </View>
 
         <TextInput placeholder='Search for photos...'
-          value={search}
+          // value={search}
           ref={searchInputRef}
-          onChangeText={value => setSearch(value)}
+          onChangeText={handleTextDebounce}
           style={styles.searchBarInput} />
 
         {
           search && (
-            <Pressable style={styles.closeIcon}>
+            <Pressable onPress={() => handleSearch('')} style={styles.closeIcon}>
               <Ionicons name='close' size={20} color={Colors.primary} />
             </Pressable>
           )
