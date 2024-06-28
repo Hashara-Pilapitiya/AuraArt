@@ -28,7 +28,7 @@ const HomeScreen = () => {
     fetchImages()
   }, []);
 
-  const fetchImages = async (params={page: 1}, append=true) => {
+  const fetchImages = async (params={page: 1}, append=false) => {
     let res = await apiCall (params);
     if (res.success && res?.data?.hits) {
       if(append) {
