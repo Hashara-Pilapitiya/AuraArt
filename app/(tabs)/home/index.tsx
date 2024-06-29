@@ -84,6 +84,20 @@ const HomeScreen = () => {
     closeFiltersModal();
   }
 
+  const clearThisFilter = (filterName) => {
+    let filterz = {...filters};
+    delete filterz[filterName];
+    setFilters({...filterz});
+    page = 1;
+    setImages([]);
+    let params = {
+      page,
+      ...filterz
+    }
+    if(activeCategory) params.category = activeCategory;
+    fetchImages(params, false);
+  }
+
   const handleChangeCategory = (cat: any) => {
     setActiveCategory(cat)
     clearSearch();
@@ -185,6 +199,38 @@ const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
       </View>
 
       {/* Filters */}
+      {
+        filters && (
+          <View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filters}>
+              {
+                Object.keys(filters).map((key, index) => {
+                  return (
+                    <View key={key} style={styles.filterItem}>
+                      {
+                        key == 'colors' ? (
+                          <View style={{
+                            height: 20,
+                            width: 30,
+                            borderRadius: 10,
+                            backgroundColor: filters[key]
+                          }} />
+                        ) : (
+                          <Text style={styles.filterItemTxt}>{filters[key]}</Text>
+                        )
+                      }
+                      <Pressable style={styles.fliterCloseIcon} onPress={() => clearThisFilter(key)}>
+                        <Ionicons name='close' size={14} color={Colors.primary} />
+                      </Pressable>
+                    </View>
+                  )
+                })
+              }
+            </ScrollView>
+          </View>
+        )
+      }
 
       {/* Images */}
       <View>
@@ -254,5 +300,23 @@ const styles = StyleSheet.create({
 
   categories: {
     marginHorizontal: 20
+  },
+
+  filters: {
+    paddingHorizontal: 20,
+    gap: 10
+  },
+
+  filterItem: {
+    backgroundColor: Colors.bgColor,
+    alignItems: 'center',
+    padding: 8,
+    flexDirection: 'row',
+    borderRadius: 10,
+    gap: 10
+  },
+
+  filterItemTxt: {
+    fontSize: 14
   }
 })
