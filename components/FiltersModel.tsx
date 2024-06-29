@@ -7,6 +7,7 @@ import {
 import { useMemo } from 'react';
 import { BlurView } from 'expo-blur';
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Colors from '@/constants/Colors';
 
 const FiltersModel = ({modalRef}) => {
 
@@ -23,7 +24,9 @@ const FiltersModel = ({modalRef}) => {
             // onChange={handleSheetChanges}
         >
             <BottomSheetView style={styles.contentContainer}>
-                <Text>Awesome 🎉</Text>
+                <View style={styles.content}></View>
+                <Text style={styles.filterTxt}>Filters</Text>
+                <Text style={styles.filterTxt}>Sections Here.</Text>
             </BottomSheetView>
         </BottomSheetModal>
   )
@@ -69,13 +72,6 @@ const CustomBackdrop = ({ animatedIndex, style}) => {
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 24,
-        justifyContent: 'center',
-        backgroundColor: 'grey',
-    },
-
     contentContainer: {
         flex: 1,
         alignItems: 'center',
@@ -83,5 +79,19 @@ const styles = StyleSheet.create({
 
     overlay: {
         backgroundColor: 'rgba(0,0,0,0.8)',
+    },
+
+    content: {
+        width: '100%',
+        gap: 15,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+    },
+
+    filterTxt: {
+        color: Colors.textColor,
+        fontSize: 30,
+        fontWeight: 'bold',
+       marginBottom: 5
     }
 })
