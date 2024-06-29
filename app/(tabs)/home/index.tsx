@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text, TouchableOpacity, Pressable, ScrollView, TextInput, ActivityIndicator } from 'react-native'
 import React, { useCallback, useEffect } from 'react'
 import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
-import { Stack, useRouter } from 'expo-router'
+import { Stack } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Colors from '@/constants/Colors'
 import Categories from '@/components/Categories'
@@ -13,8 +13,6 @@ import FiltersModel from '@/components/FiltersModel'
 let page = 1;
 
 const HomeScreen = () => {
-
-  const router = useRouter();
 
   const {top} = useSafeAreaInsets();
 
@@ -32,11 +30,15 @@ const HomeScreen = () => {
 
   const modalRef = React.useRef(null)
 
+  const scrollRef = React.useRef<ScrollView>(null)
+
+  const [isEndReached, setIsEndReached] = React.useState(false)
+
   useEffect(() => {
     fetchImages()
   }, []);
 
-  const fetchImages = async (params={page: 1}, append=false) => {
+  const fetchImages = async (params={page: 1}, append=true) => {
     console.log('fetching images', params, append)
     let res = await apiCall (params);
     if (res.success && res?.data?.hits) {
@@ -118,7 +120,7 @@ const HomeScreen = () => {
       page = 1;
       setImages([]);
       setActiveCategory(null);
-      fetchImages({page, q: tex, ...filters}, false)
+      fetchImages({page, q: text, ...filters}, false)
     } 
 
     if(text == '') {
@@ -134,7 +136,36 @@ const clearSearch = () => {
   setSearch('');
   searchInputRef?.current?.clear();
   page = 1;
+}
 
+const handleScroll = (event: any) => {
+  const contentHeight = event.nativeEvent.contentSize.height;
+  const scrollViewHeight = event.nativeEvent.layoutMeasurement.height;
+  const scrollOffset = event.nativeEvent.contentOffset.y;
+  const bottomPostion = contentHeight - scrollViewHeight;
+
+  if (scrollOffset >= bottomPostion - 1) {
+    if(!isEndReached) {
+      setIsEndReached(true);
+      console.log('fetch more images')
+      ++page;
+      let params = {
+        page,
+        ...filters
+      }
+      if(activeCategory) params.category = activeCategory;
+      if(search) params.q = search;
+      fetchImages(params);
+    }
+   
+  } else if(isEndReached) {
+    setIsEndReached(false);
+  
+  }
+}
+
+const handleScrollUp = () => {
+  scrollRef?.current?.scrollTo({y: 0, animated: true})
 }
 
 
@@ -146,11 +177,11 @@ const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
       headerTransparent: true,
       headerTitle: '',
       headerLeft: () => (
-          <TouchableOpacity onPress={() => router.back()}>
-              <View style={{backgroundColor: Colors.primary, padding: 8, borderRadius: 10}}>
-                  <Feather name='arrow-left' size={22} color='white' />
+          <Pressable onPress={handleScrollUp}>
+              <View>
+                  <Text style={styles.header}>AuraArt</Text>
               </View>
-          </TouchableOpacity>
+          </Pressable>
       ),
 
       headerRight: () => (
@@ -166,7 +197,11 @@ const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
 
     <View style={{paddingTop}}>
 
-    <ScrollView contentContainerStyle={{gap: 15}} showsVerticalScrollIndicator={false}>
+    <ScrollView 
+      onScroll={handleScroll}
+      scrollEventThrottle={5}
+      ref={scrollRef}
+      contentContainerStyle={{gap: 15}} showsVerticalScrollIndicator={false}>
 
       {/* Search Bar */}
       <View style={styles.searchBar}>
@@ -267,6 +302,13 @@ export default HomeScreen
 
 
 const styles = StyleSheet.create({
+  header: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: Colors.primary,
+    letterSpacing: 1
+  },
+
   container: {
     flex: 1,
     gap: 15,
