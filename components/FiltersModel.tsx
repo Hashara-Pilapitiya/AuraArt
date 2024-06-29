@@ -12,7 +12,7 @@ import { CommonFilterRow, SectionView } from '../components/FilterViews';
 import { capitalize } from '@/helpers/common';
 import { data } from '@/constants/data';
 
-const FiltersModel = ({modalRef}) => {
+const FiltersModel = ({modalRef, onClose, onApply, onReset, filters, setFilters}) => {
 
     const snapPoints = useMemo(() => ['75%'], []);
 
@@ -38,7 +38,12 @@ const FiltersModel = ({modalRef}) => {
                             <View key={sectionName}>
                                 <SectionView
                                     title={title}
-                                    content={sectionView({data: sectionData})}
+                                    content={sectionView({
+                                        data: sectionData,
+                                        filters,
+                                        setFilters,
+                                        filterName: sectionName
+                                    })}
                                 />
                             </View>
                         )
@@ -56,7 +61,7 @@ const sections = {
     "order": (props) => <CommonFilterRow {...props} />,
     "orientation": (props) => <CommonFilterRow {...props} />,
     "type": (props) => <CommonFilterRow {...props} />,
-    "color": (props) => <CommonFilterRow {...props} />
+    "colors": (props) => <CommonFilterRow {...props} />
 }
 
 const CustomBackdrop = ({ animatedIndex, style}) => {

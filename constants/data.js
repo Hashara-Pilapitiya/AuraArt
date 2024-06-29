@@ -32,14 +32,13 @@ const filters = {
         'green',
         'turquoise',
         'blue',
-        'lilac',
         'pink',
-        'white',
         'gray',
         'black',
-        'brown'
+        'brown',
+        'white'
     
-    ]
+    ],
 }
 
 export const data = {

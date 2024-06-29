@@ -28,6 +28,8 @@ const HomeScreen = () => {
 
   const [images, setImages] = React.useState([])
 
+  const [filters, setFilters] = React.useState(null)
+
   const modalRef = React.useRef(null)
 
   useEffect(() => {
@@ -52,6 +54,16 @@ const HomeScreen = () => {
 
   const closeFiltersModal = () => {
     modalRef?.current?.close();
+  }
+
+  const applyFilters = () => {
+    console.log('Applying filters')
+    closeFiltersModal();
+  }
+
+  const resetFilters = () => {
+    console.log('Reseting filters')
+    closeFiltersModal();
   }
 
   const handleChangeCategory = (cat: any) => {
@@ -163,7 +175,14 @@ const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
     </ScrollView>
 
     {/* Filters Model */}
-    <FiltersModel modalRef={modalRef} />
+    <FiltersModel
+     modalRef={modalRef}
+     filters={filters}
+     setFilters={setFilters}
+     onClose={closeFiltersModal}
+     onApply={applyFilters}
+     onRest={resetFilters}
+    />
     
 
     </View>
