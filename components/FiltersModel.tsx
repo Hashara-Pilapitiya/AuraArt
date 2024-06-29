@@ -8,6 +8,9 @@ import { useMemo } from 'react';
 import { BlurView } from 'expo-blur';
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
+import { CommonFilterRow, SectionView } from '../components/FilterViews';
+import { capitalize } from '@/helpers/common';
+import { data } from '@/constants/data';
 
 const FiltersModel = ({modalRef}) => {
 
@@ -26,13 +29,35 @@ const FiltersModel = ({modalRef}) => {
             <BottomSheetView style={styles.contentContainer}>
                 <View style={styles.content}></View>
                 <Text style={styles.filterTxt}>Filters</Text>
-                <Text style={styles.filterTxt}>Sections Here.</Text>
+                {
+                    Object.keys(sections).map((sectionName, index) => {
+                        let sectionView = sections[sectionName];
+                        let sectionData = data.filters[sectionName];
+                        let title = capitalize(sectionName);
+                        return (
+                            <View key={sectionName}>
+                                <SectionView
+                                    title={title}
+                                    content={sectionView({data: sectionData})}
+                                />
+                            </View>
+                        )
+                            
+                    })
+                }
             </BottomSheetView>
         </BottomSheetModal>
   )
 }
 
 export default FiltersModel
+
+const sections = {
+    "order": (props) => <CommonFilterRow {...props} />,
+    "orientation": (props) => <CommonFilterRow {...props} />,
+    "type": (props) => <CommonFilterRow {...props} />,
+    "color": (props) => <CommonFilterRow {...props} />
+}
 
 const CustomBackdrop = ({ animatedIndex, style}) => {
 
@@ -74,7 +99,7 @@ const CustomBackdrop = ({ animatedIndex, style}) => {
 const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
-        alignItems: 'center',
+        marginHorizontal: 20,
     },
 
     overlay: {
