@@ -62,7 +62,8 @@ const HomeScreen = () => {
   }
 
   const resetFilters = () => {
-    console.log('Reseting filters')
+    console.log('Reseting filters');
+    setFilters(null);
     closeFiltersModal();
   }
 
@@ -181,7 +182,7 @@ const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
      setFilters={setFilters}
      onClose={closeFiltersModal}
      onApply={applyFilters}
-     onRest={resetFilters}
+     onReset={resetFilters}
     />
     
 
