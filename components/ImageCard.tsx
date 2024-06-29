@@ -3,7 +3,21 @@ import React from 'react'
 import { Image } from 'expo-image'
 import { getImageSize } from '../helpers/common'
 
-const ImageCard = ({item, index, columns}) => {
+interface ItemType {
+  imageHeight: number;
+  imageWidth: number;
+  webformatURL: string;
+  // Define the rest of the properties of 'ItemType' here
+}
+
+interface ImageCardProps {
+  item: ItemType;
+  index: number;
+  columns: number;
+  router: any;
+}
+
+const ImageCard = ({item, index, columns, router}: ImageCardProps) => {
 
   const isLastInRow = () => {
     return (index+1) % columns === 0;
@@ -15,7 +29,7 @@ const ImageCard = ({item, index, columns}) => {
   }
 
   return (
-    <Pressable style={[styles.imageWrapper, !isLastInRow() && styles.spacing]}>
+    <Pressable onPress={() => router.push({pathname: 'home/image', params: {...item}})} style={[styles.imageWrapper, !isLastInRow() && styles.spacing]}>
       <Image
         style={[styles.image, getImageHeight()]}
         source={{uri: item?.webformatURL}}

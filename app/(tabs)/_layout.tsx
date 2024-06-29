@@ -17,6 +17,11 @@ const Layout = () => {
             name='home/index'
             options={{ headerTransparent: true, headerTitle: '' }}
             />
+
+            <Stack.Screen
+            name='home/image'
+            options={{ headerTransparent: true, headerTitle: '', presentation: 'transparentModal', animation: 'fade' }}
+            />
         </Stack>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

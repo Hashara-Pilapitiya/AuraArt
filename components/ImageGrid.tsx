@@ -4,7 +4,7 @@ import { MasonryFlashList } from '@shopify/flash-list'
 import ImageCard from './ImageCard'
 import { wp, getColumnCount  } from '../helpers/common'
 
-const ImageGrid = ({images}) => {
+const ImageGrid = ({images, router}: {images: any[], router: any}) => {
 
   const columns = getColumnCount()
 
@@ -13,9 +13,8 @@ const ImageGrid = ({images}) => {
           <MasonryFlashList
             data={images}
             numColumns={columns}
-            initialNumToRender={100}
             contentContainerStyle={styles.listContainerStyle}
-            renderItem={({ item, index }) => <ImageCard item={item} index={index} columns={columns} />}
+            renderItem={({ item, index }) => <ImageCard router={router} item={item} index={index} columns={columns} />}
             estimatedItemSize={200}
           />
         </View>

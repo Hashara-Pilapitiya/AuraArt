@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text, TouchableOpacity, Pressable, ScrollView, TextInput, ActivityIndicator } from 'react-native'
 import React, { useCallback, useEffect } from 'react'
 import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
-import { Stack } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Colors from '@/constants/Colors'
 import Categories from '@/components/Categories'
@@ -33,6 +33,8 @@ const HomeScreen = () => {
   const scrollRef = React.useRef<ScrollView>(null)
 
   const [isEndReached, setIsEndReached] = React.useState(false)
+
+  const router = useRouter();
 
   useEffect(() => {
     fetchImages()
@@ -255,7 +257,7 @@ const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
                           <Text style={styles.filterItemTxt}>{filters[key]}</Text>
                         )
                       }
-                      <Pressable style={styles.fliterCloseIcon} onPress={() => clearThisFilter(key)}>
+                      <Pressable onPress={() => clearThisFilter(key)}>
                         <Ionicons name='close' size={14} color={Colors.primary} />
                       </Pressable>
                     </View>
@@ -270,7 +272,7 @@ const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
       {/* Images */}
       <View>
           {
-            images.length > 0 && <ImageGrid images={images} />
+            images.length > 0 && <ImageGrid images={images} router={router} />
           }
       </View>
 
