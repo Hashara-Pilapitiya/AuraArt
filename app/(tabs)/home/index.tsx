@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TouchableOpacity, Pressable, ScrollView, TextInput } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Pressable, ScrollView, TextInput, ActivityIndicator } from 'react-native'
 import React, { useCallback, useEffect } from 'react'
 import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { Stack, useRouter } from 'expo-router'
@@ -57,13 +57,30 @@ const HomeScreen = () => {
   }
 
   const applyFilters = () => {
-    console.log('Applying filters')
+    if(filters) {
+      page = 1;
+      setImages([]);
+      let params = {
+        page,
+        ...filters
+      }
+      if(activeCategory) params.category = activeCategory;
+      fetchImages(params, false);
+    }
     closeFiltersModal();
   }
 
   const resetFilters = () => {
-    console.log('Reseting filters');
-    setFilters(null);
+    if(filters) {
+      page = 1;
+      setFilters(null);
+      setImages([]);
+      let params = {
+        page
+      }
+      if(activeCategory) params.category = activeCategory;
+      fetchImages(params, false);
+    }
     closeFiltersModal();
   }
 
@@ -73,7 +90,8 @@ const HomeScreen = () => {
     setImages([]);
     page = 1;
     let params = {
-      page
+      page,
+      ...filters
     }
     if(cat) params.category = cat;
     fetchImages(params, false);
@@ -86,7 +104,7 @@ const HomeScreen = () => {
       page = 1;
       setImages([]);
       setActiveCategory(null);
-      fetchImages({page, q: text}, false)
+      fetchImages({page, q: tex, ...filters}, false)
     } 
 
     if(text == '') {
@@ -94,7 +112,7 @@ const HomeScreen = () => {
       searchInputRef?.current?.clear();
       setImages([]);
       setActiveCategory(null);
-      fetchImages({page}, false)
+      fetchImages({page, ...filters}, false)
     }
 }
 
@@ -166,11 +184,18 @@ const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
 
       </View>
 
+      {/* Filters */}
+
       {/* Images */}
       <View>
           {
             images.length > 0 && <ImageGrid images={images} />
           }
+      </View>
+
+      {/* Load More */}
+      <View style={{marginBottom: 70, marginTop: images.length > 0 ? 10 : 70}}>
+        <ActivityIndicator size='large' color={Colors.primary} />
       </View>
 
     </ScrollView>
