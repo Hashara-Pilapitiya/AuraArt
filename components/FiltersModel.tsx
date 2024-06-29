@@ -5,6 +5,8 @@ import {
     BottomSheetView
   } from '@gorhom/bottom-sheet';
 import { useMemo } from 'react';
+import { BlurView } from 'expo-blur';
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 
 const FiltersModel = ({modalRef}) => {
 
@@ -17,6 +19,7 @@ const FiltersModel = ({modalRef}) => {
             index={0}
             snapPoints={snapPoints}
             enablePanDownToClose={true}
+            backdropComponent={CustomBackdrop}
             // onChange={handleSheetChanges}
         >
             <BottomSheetView style={styles.contentContainer}>
@@ -27,6 +30,42 @@ const FiltersModel = ({modalRef}) => {
 }
 
 export default FiltersModel
+
+const CustomBackdrop = ({ animatedIndex, style}) => {
+
+    const containerAnimatedStyle = useAnimatedStyle(() => {
+        let opacity = interpolate(
+            animatedIndex.value,
+            [-1, 0],
+            [0, 1],
+            Extrapolation.CLAMP
+        )
+        return {
+            opacity
+        }
+
+    })
+
+    const containerStyle = [
+        StyleSheet.absoluteFill,
+        style,
+        styles.overlay,
+        containerAnimatedStyle
+    ]
+
+    return (
+        <Animated.View style={containerStyle}>
+
+            {/* Blur View */}
+            <BlurView
+                style={StyleSheet.absoluteFill}
+                tint='dark'
+                intensity={100}
+            />
+
+        </Animated.View>
+    )
+}
 
 
 const styles = StyleSheet.create({
@@ -41,4 +80,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
+
+    overlay: {
+        backgroundColor: 'rgba(0,0,0,0.8)',
+    }
 })
