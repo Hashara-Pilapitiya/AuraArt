@@ -8,6 +8,7 @@ import Categories from '@/components/Categories'
 import { apiCall } from '../../../api'
 import ImageGrid from '@/components/ImageGrid'
 import { debounce } from 'lodash'
+import FiltersModel from '@/components/FiltersModel'
 
 let page = 1;
 
@@ -27,6 +28,8 @@ const HomeScreen = () => {
 
   const [images, setImages] = React.useState([])
 
+  const modalRef = React.useRef(null)
+
   useEffect(() => {
     fetchImages()
   }, []);
@@ -41,6 +44,14 @@ const HomeScreen = () => {
         setImages([...res.data.hits])
       }
     }
+  }
+
+  const openFiltersModal = () => {
+    modalRef?.current?.present();
+  }
+
+  const closeFiltersModal = () => {
+    modalRef?.current?.close();
   }
 
   const handleChangeCategory = (cat: any) => {
@@ -98,7 +109,7 @@ const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
       ),
 
       headerRight: () => (
-          <Pressable onPress={() => router.navigate('Profile')}>
+          <Pressable onPress={openFiltersModal}>
               <View style={{backgroundColor: Colors.primary, padding: 8, borderRadius: 10, marginTop: -8}}>
                   <FontAwesome6 name='bars-staggered' size={22} color='white' />
                 
@@ -150,6 +161,10 @@ const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
       </View>
 
     </ScrollView>
+
+    {/* Filters Model */}
+    <FiltersModel modalRef={modalRef} />
+    
 
     </View>
 
