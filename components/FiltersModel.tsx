@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, Pressable } from 'react-native'
 import React from 'react'
 import {
     BottomSheetModal,
@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 import { BlurView } from 'expo-blur';
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
-import { CommonFilterRow, SectionView } from '../components/FilterViews';
+import { ColorFilter, CommonFilterRow, SectionView } from '../components/FilterViews';
 import { capitalize } from '@/helpers/common';
 import { data } from '@/constants/data';
 
@@ -50,6 +50,20 @@ const FiltersModel = ({modalRef, onClose, onApply, onReset, filters, setFilters}
                             
                     })
                 }
+
+                <View style={styles.buttons}>
+
+                    <Pressable onPress={onReset} style={styles.resetBtn}>
+                        <Text style={styles.resetBtnTxt}>Reset</Text>
+                    </Pressable> 
+
+                    <Pressable onPress={onApply} style={styles.applyBtn}>
+                        <Text style={styles.applyBtnTxt}>Apply</Text>
+                    </Pressable>  
+
+                </View>
+
+
             </BottomSheetView>
         </BottomSheetModal>
   )
@@ -61,7 +75,7 @@ const sections = {
     "order": (props) => <CommonFilterRow {...props} />,
     "orientation": (props) => <CommonFilterRow {...props} />,
     "type": (props) => <CommonFilterRow {...props} />,
-    "colors": (props) => <CommonFilterRow {...props} />
+    "colors": (props) => <ColorFilter {...props} />
 }
 
 const CustomBackdrop = ({ animatedIndex, style}) => {
@@ -123,5 +137,41 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
        marginBottom: 5
+    },
+
+    buttons: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 30, 
+    },
+
+    resetBtn: {
+        flex: 1,
+        padding: 15,
+        backgroundColor: 'gray',
+        borderRadius: 10,
+        marginRight: 10,
+        alignItems: 'center'
+    },
+
+    resetBtnTxt: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 17
+    },
+
+    applyBtn: {
+        padding: 15,
+        backgroundColor: Colors.primary,
+        borderRadius: 10,
+        flex: 1,
+        alignItems: 'center'
+    },
+
+    applyBtnTxt: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 17
     }
 })

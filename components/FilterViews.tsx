@@ -19,7 +19,7 @@ export const CommonFilterRow = ({data, filterName, filters, setFilters}) => {
     const onSelect = (item) => {
         setFilters({...filters, [filterName]: item})
     }
-    
+
     return (
         <View style={styles.flexRowWrap}>
             {
@@ -30,8 +30,39 @@ export const CommonFilterRow = ({data, filterName, filters, setFilters}) => {
                     let color = isActive ? 'white' : 'black';
 
                     return (
-                        <Pressable onPress={() => onSelect(item)} key={item} style={[styles.outlinedButton, {backgroundColor}]}>
+                        <Pressable onPress={() => onSelect(item)} key={index} style={[styles.outlinedButton, {backgroundColor}]}>
                             <Text style={[styles.outlinedButtonTxt, {color}]}>{capitalize(item)}</Text>
+                        </Pressable>
+                    )
+                })
+            }
+        </View>
+    )
+}
+
+
+export const ColorFilter = ({data, filterName, filters, setFilters}) => {
+
+    const onSelect = (item) => {
+        setFilters({...filters, [filterName]: item})
+    }
+
+    return (
+        <View style={styles.flexRowWrap}>
+            {
+                data && data.map((item, index) => {
+
+                    let isActive = filters && filters[filterName] == item;
+                    let borderColor = isActive ? Colors.primary : 'white';
+                    
+
+                    return (
+                        <Pressable onPress={() => onSelect(item)} key={index}>
+                            
+                            <View style={[styles.colorWrapper, {borderColor}]}>
+                                <View style={[styles.color, {backgroundColor: item}]} />
+                            </View>
+
                         </Pressable>
                     )
                 })
@@ -67,5 +98,18 @@ const styles = StyleSheet.create({
 
     outlinedButtonTxt: {
         color: 'gray'
+    },
+
+    colorWrapper: {
+        padding: 3,
+        borderRadius: 10,
+        borderColor: 'gray',
+        borderWidth: 1
+    },
+
+    color: {
+        width: 40,
+        height: 40,
+        borderRadius: 10
     }
 })

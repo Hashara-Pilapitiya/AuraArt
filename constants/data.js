@@ -37,7 +37,6 @@ const filters = {
         'black',
         'brown',
         'white'
-    
     ],
 }
 
