@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.hasharapilapitiya.AuraArt"
     },
     "web": {
       "bundler": "metro",
@@ -34,6 +35,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "895a3214-9ff6-4c92-8f4f-83511bbba0e3"
+      }
     }
   }
 }
