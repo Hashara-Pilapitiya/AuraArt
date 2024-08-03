@@ -3,7 +3,7 @@ import React from 'react'
 import { data } from '../constants/data'
 import Colors from '@/constants/Colors'
 
-const Categories = ({activeCategory, handleChangeCategory}) => {
+const Categories = ({activeCategory, handleChangeCategory}: {activeCategory: string, handleChangeCategory: (category: string | null) => void}) => {
   return (
    
    <FlatList 
@@ -22,7 +22,7 @@ const Categories = ({activeCategory, handleChangeCategory}) => {
   )
 }
 
-const CategoryItem = ({title, index, isActive, handleChangeCategory}) => {
+const CategoryItem = ({title, index, isActive, handleChangeCategory}: {title: string, index: number, isActive: boolean, handleChangeCategory: (category: string | null) => void}) => {
 
     let color = isActive ? Colors.primary :  'black'
     let backgroundColor = isActive ? 'white' : Colors.lightGray
